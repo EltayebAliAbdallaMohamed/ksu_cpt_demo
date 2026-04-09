@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unit One - What are you interested in?</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      font-size: larger;
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 1em;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+
+    main {
+      max-width: 600px;
+      background: white;
+      padding: 1.5em;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+
+    button {
+      background: none;
+      border: 2px solid #0078d4;
+      color: #0078d4;
+      font-size: 20px;
+      margin: 5px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: #0078d4;
+      color: white;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    input[type="number"] {
+      font-size: 14px;
+      width: 60px;
+      margin-right: 10px;
+      text-align: center;
+    }
+
+    #keyWords {
+      text-align: center;
+      color: #0078d4;
+      font-size: 1.3em;
+      margin-bottom: 10px;
+    }
+
+    #english {
+      color: #444;
+      background: #f0f8ff;
+      padding: 1em;
+      border-radius: 5px;
+      line-height: 1.6;
+    }
+
+    #scrambledText {
+      color: #d9534f;
+      background: #fff3cd;
+      padding: 1em;
+      border-radius: 5px;
+      line-height: 1.6;
+      margin: 0.5em 0 0 0;
+      font-style: italic;
+      border-left: 4px solid #f0ad4e;
+      flex: 1;
+    }
+
+    #scrambleCheckboxContainer {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-top: 0.5em;
+    }
+
+    #scrambleCheckboxLabel {
+      cursor: pointer;
+      font-size: 14px;
+      color: #333;
+      margin-top: 1em;
+      font-weight: normal;
+      white-space: nowrap;
+    }
+
+    #scrambleCheckbox {
+      margin-top: 1em;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      accent-color: #f0ad4e;
+      flex-shrink: 0;
+    }
+
+    #q {
+      background: #0078d4;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      margin-top: 1em;
+      text-align: center;
+    }
+
+    details {
+      margin-top: 0.5em;
+    }
+
+    small {
+      color: #777;
+      font-weight: normal;
+    }
+
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 1em 0;
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    footer span {
+      color: #0078d4;
+      font-weight: bold;
+    }
+
+    #arabic {
+      direction: rtl;
+      text-align: right;
+      background: #fff8e1;
+      padding: 1em;
+      border-radius: 5px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0.6em;
+      }
+      #q {
+        font-size: 0.9em;
+      }
+      button {
+        font-size: 18px;
+        padding: 4px 8px;
+      }
+    }
+
+    #questionBasedOnAudio {
+      color: blue;
+      text-align: left;
+    }
+
+    #questionBasedOnAudio li,
+    #answer li {
+      margin-bottom: 0.8em;
+    }
+
+    #questionBasedOnAudio ol {
+      padding-left: 1em;
+    }
+
+    .tts-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    /* Quiz Mode Styles */
+    .quiz-audio-section {
+      margin-bottom: 1.5em;
+      padding: 1em;
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      border-radius: 8px;
+    }
+
+    .quiz-audio-label {
+      font-weight: bold;
+      color: #856404;
+      margin-bottom: 0.5em;
+      display: block;
+    }
+
+    #quizAudio {
+      width: 100%;
+      height: 40px;
+      margin-bottom: 0.5em;
+      border-radius: 5px;
+    }
+
+    .audio-instruction {
+      font-size: 0.95em;
+      color: #856404;
+      font-style: italic;
+    }
+
+    .quiz-question-section {
+      margin-bottom: 1.5em;
+      padding: 1em;
+      background: #f9f9f9;
+      border: 2px solid #0078d4;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1em;
+      flex-wrap: wrap;
+    }
+
+    .quiz-question-text {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .quiz-question-btn {
+      background: none;
+      border: 2px solid #f39c12;
+      color: #f39c12;
+      font-size: 18px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+      flex-shrink: 0;
+    }
+
+    .quiz-question-btn:hover {
+      background-color: #f39c12;
+      color: white;
+    }
+
+    .quiz-options {
+      margin: 1em 0;
+      padding: 1em;
+      background: #f0f8ff;
+      border-left: 4px solid #0078d4;
+      border-radius: 4px;
+    }
+
+    .quiz-option {
+      margin-bottom: 1em;
+      padding: 0.8em;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      background: white;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .quiz-option:hover {
+      border-color: #0078d4;
+      background: #f0f8ff;
+    }
+
+    .quiz-option-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .quiz-option input[type="radio"] {
+      margin-right: 0.5em;
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      accent-color: #0078d4;
+      flex-shrink: 0;
+    }
+
+    .quiz-option label {
+      cursor: pointer;
+      font-size: 1em;
+      display: inline;
+      flex: 1;
+    }
+
+    .option-speak-btn {
+      background: none;
+      border: 1px solid #f39c12;
+      color: #f39c12;
+      font-size: 16px;
+      padding: 3px 6px;
+      border-radius: 3px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: 0.2s;
+    }
+
+    .option-speak-btn:hover {
+      background-color: #f39c12;
+      color: white;
+    }
+
+    .quiz-navigation {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5em;
+      margin-top: 1.5em;
+      flex-wrap: wrap;
+    }
+
+    .quiz-nav-btn {
+      flex: 1;
+      min-width: 100px;
+    }
+
+    #quizProgress {
+      text-align: center;
+      font-weight: bold;
+      color: #0078d4;
+      margin-bottom: 1em;
+      font-size: 1.1em;
+    }
+
+    #quizScore {
+      background: #e8f5e9;
+      border: 2px solid #4caf50;
+      padding: 1em;
+      border-radius: 8px;
+      text-align: center;
+      margin: 1em 0;
+      font-size: 1.2em;
+    }
+
+    #quizScore.fail {
+      background: #ffebee;
+      border-color: #f44336;
+    }
+
+    .speaking-indicator {
+      color: #f39c12;
+      font-weight: bold;
+      display: none;
+      margin: 0.5em 0;
+      font-size: 0.95em;
+    }
+
+    .speaking-indicator.active {
+      display: block;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .pulse {
+      display: inline-block;
+      animation: pulse 1s infinite;
+    }
+
+    #quizMode {
+      display: none;
+    }
+
+    #quizMode.active {
+      display: block;
+    }
+
+    #lessonMode {
+      display: block;
+    }
+
+    #lessonMode.hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body role="document">
+
+  <!-- LESSON MODE -->
+  <main role="main" aria-label="Lesson and quiz player interface">
+
+    <section id="lessonMode">
+      <p id="speaker" aria-label="Speaker name"></p>
+      <p id="q" aria-live="polite"></p>
+      <p id="keyWords" aria-label="Keywords"></p>
+
+      <details id="definition" aria-label="Definition section">
+        <summary aria-label="Show or hide definition">Definition</summary>
+        <p id="def"></p>
+      </details>
+
+      <details id="illustrations" style="display:none;" aria-label="Illustration section">
+        <summary aria-label="Show or hide illustration">Illustration</summary>
+        <img id="image" alt="Related illustration" width="200" height="200" style="display:none;">
+      </details>
+
+      <details id="englishDetails" open aria-label="English script of audio">
+        <summary aria-label="Show or hide English script">English Script:</summary>
+        <p id="english"></p>
+
+       <!--
+        <button id="scrambleBtn" aria-label="Scramble English script">Scramble Script</button>
+         <p id="scrambledText"></p>
+        --> 
+       
+      </details>
+      <div id="scrambleCheckboxContainer">
+        <label id="scrambleCheckboxLabel" for="scrambleCheckbox">Scramble Script:</label>
+        <input 
+          type="checkbox" 
+          id="scrambleCheckbox"
+          aria-label="Toggle scrambled script"
+        />
+        <p id="scrambledText"></p>
+      </div>
+
+      <details id="arabicDetails" open aria-label="Arabic translation of script">
+        <summary aria-label="Show or hide Arabic translation">Arabic Translation:</summary>
+        <p id="arabic"></p>
+      </details>
+
+      <p id="refer_to_container"><strong>Refer to:</strong> <span id="refer_to"></span></p>
+      <p id="back_to_container"><strong>Back to:</strong> <span id="back_to"></span></p>
+
+      <audio id="audio" controls aria-label="Audio player">
+        <source id="audioSource" src="" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+
+      <hr>
+
+      <div class="controls" role="group" aria-label="Navigation controls">
+
+        <input 
+          type="number" 
+          id="audioIndex" 
+          min="1" 
+          placeholder="#" 
+          aria-label="Enter clip number"
+        />
+
+        <button id="search" aria-label="Search for audio by number">&#128269;</button>
+
+        <button id="prev" aria-label="Previous audio clip">&#9664;</button>
+        <button id="next" aria-label="Next audio clip">&#9654;</button>
+
+        <label aria-label="Autoplay next audio">
+          <input type="checkbox" id="autoPlay" unchecked aria-checked="false" />
+          Auto play next audio clip
+        </label>
+
+        <div id="questionBasedOnAudio"></div>
+      </div>
+
+      <details aria-label="Text-to-speech options">
+        <summary aria-label="Show or hide text-to-speech controls">TTS</summary>
+
+        <div class="tts-buttons" role="group" aria-label="TTS controls">
+          <button id="speakEnglish" aria-label="Text to speech: read English script">TTS-English</button>
+          <button id="speakArabic" aria-label="Text to speech: read Arabic translation">TTS-Arabic</button>
+          <button id="stop" aria-label="Stop text to speech">Stop TTS</button>
+          <button id="speakSelection" aria-label="Text to speech: read selected text">TTS-Selected</button>
+        </div>
+      </details>
+       
+      <div>
+        <details id="answerDetails" aria-label="Answer section">
+          <summary aria-label="Show or hide answer">Answer</summary>
+          <div id="answer"></div>
+        </details>
+      </div>
+
+      <button id="startQuizBtn" aria-label="Start grammar quiz mode">Start Quiz Mode</button>
+
+      <hr>
+
+      <small aria-label="Tip: Use arrow keys">💡 Tip: Use ← / → to navigate.</small>
+    </section>
+
+    <!-- QUIZ MODE -->
+    <section id="quizMode" role="region" aria-label="Grammar quiz based on audio">
+      <h2>Unit One Quiz - What are you interested in?</h2>
+      
+      <div id="quizProgress" role="status" aria-live="polite"></div>
+
+      <!-- Audio Player for Quiz -->
+      <div class="quiz-audio-section">
+        <label class="quiz-audio-label" for="quizAudio">🔊 Listen to Audio Clip:</label>
+        <audio id="quizAudio" controls aria-label="Quiz audio clip">
+          <source id="quizAudioSource" src="" type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+        <p class="audio-instruction">Listen carefully to the audio clip, then answer the question below.</p>
+      </div>
+
+      <div class="quiz-question-section">
+        <div class="quiz-question-text">
+          <p id="quizQuestion" role="heading" aria-level="2"></p>
+        </div>
+        <button id="speakQuestionBtn" class="quiz-question-btn" aria-label="Read question aloud">🔊</button>
+      </div>
+
+      <div class="quiz-options" role="group" aria-label="Answer options">
+        <div id="quizOptions"></div>
+      </div>
+
+      <div class="speaking-indicator" id="speakingIndicator" role="status" aria-live="polite">
+        <span class="pulse">🔊</span> Speaking...
+      </div>
+
+      <div class="quiz-navigation">
+        <button id="quizPrev" class="quiz-nav-btn" aria-label="Previous question">← Previous</button>
+        <button id="quizNext" class="quiz-nav-btn" aria-label="Next question or submit quiz">Next →</button>
+      </div>
+
+      <button id="exitQuiz" aria-label="Exit quiz and return to lessons">Exit Quiz</button>
+
+      <hr>
+
+      <div id="quizScore" style="display: none;" role="region" aria-label="Quiz results">
+        <h2>Quiz Results</h2>
+        <p id="scoreText"></p>
+        <p id="scoreMessage"></p>
+      </div>
+
+      <div id="quizReview" style="display: none;">
+        <details open aria-label="Review your answers">
+          <summary>Review Answers</summary>
+          <div id="reviewContent"></div>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <footer role="contentinfo">
+    <p>Created by <span>Eltayeb Mohamed</span> | <span>© 2025 Eltayeb Mohamed</span>. All rights reserved.</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    const utterance = new SpeechSynthesisUtterance();
+    let currentAudioIndex = 0;
+    let quizModeActive = false;
+    let currentQuizQuestion = 0;
+    let quizAnswers = [];
+    let isSpeaking = false;
+    let isScrambled = false;
+
+    const Sentences = [
+      {
+        speaker: `Teacher:`,
+        keyWord: ``,
+        definition: ``,
+        english: `How about you, Marcus?`,
+        arabic: ` ماذا عنك يا ماركوس؟`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `How about you, Marcus.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+      {
+        speaker: `Teacher:`,
+        keyWord: ``,
+        definition: ``,
+        english: `What do you enjoy doing?`,
+        arabic: `ما الذي تستمتع بفعله؟`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `What do you enjoy doing.mp3`,
+        audioQuestion: `What does Marcus enjoy doing?`,
+        answer: ``,
+        Image:``
+      },
+      {
+        speaker: `Marcus:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Being active.`,
+        arabic: ` أن أكون نشيطًا.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Being active.mp3`,
+        audioQuestion: ``,
+        answer: `He enjoys being active.`,
+        Image:``
+      },
+      {
+        speaker: `Marcus:`,
+        keyWord: `hiking`,
+        definition: `a long walk in the countryside or wilderness, typically for pleasure or exercise.`,
+        english: `Playing a sport, or hiking or biking.`,
+        arabic: ` ممارسة الرياضة، أو التنزه، أو ركوب الدراجات.`,
+        refer_to: `Page 65 in the textbook.`,
+        back_to: ``,
+        audio: `Playing a sport, or hiking or biking.mp3`,
+        audioQuestion: `What does Marcus mean by ' Being active'?`,
+        answer: `He enjoys playing a sport, hiking, or biking.`,
+        Image:``
+      },
+      {
+        speaker: `Marcus:`,
+        keyWord: `sport`,
+        definition: `an activity involving physical exertion and skill in which an individual or team competes against another or others for entertainment:`,
+        english: `Playing a sport.`,
+        arabic: ` ممارسة الرياضة.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Playing a sport.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:`soccer.png`
+      },
+      {
+        speaker: `Marcus:`,
+        keyWord: ``,
+        definition: ``,
+        english: `or`,
+        arabic: `أو`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `or.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:``
+      },
+       {
+        speaker: `Marcus:`,
+        keyWord: ``,
+        definition: ``,
+        english: `hiking or biking.`,
+        arabic: ` التنزه سيرًا على الأقدام أو ركوب الدراجات.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `hiking or biking.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:`hiking.png`
+      },
+        {
+        speaker: `Marcus:`,
+        keyWord: ``,
+        definition: ``,
+        english: `Physical activities are the most fun for me.`,
+        arabic: ` الأنشطة البدنية هي الأكثر متعة بالنسبة لي.`,
+        refer_to: ``,
+        back_to: ``,
+        audio: `Physical activities are the most fun for me.mp3`,
+        audioQuestion: ``,
+        answer: ``,
+        Image:`biking.png`
+      },
+      // Physical activities are the most fun for me
+
+
+
+    ];
+
+    // QUIZ DATA - Unit One
+    const quizData = [
+      {
+        question: "What is Marcus interested in?",
+        audioClip: "questions.mp3",
+        options: ["cooking", "physical activities", "video games"],
+        correct: 1
+      },
+      {
+        question: "What does being active mean?",
+        audioClip: "questions.mp3",
+        options: ["playing a sport", "sleeping", "studying"],
+        correct: 0
+      },
+      
+    ];
+
+    // DOM Elements - Lesson Mode
+    const speakEnglishBtn = document.getElementById("speakEnglish");
+    const speakArabicBtn = document.getElementById("speakArabic");
+    const speakSelectionBtn = document.getElementById("speakSelection");
+    const stopBtn = document.getElementById("stop");
+    const scrambleCheckbox = document.getElementById("scrambleCheckbox");
+
+    const q = document.getElementById("q");
+    const refer_to = document.getElementById("refer_to");
+    const back_to = document.getElementById("back_to");
+    const speaker = document.getElementById("speaker");
+    const keyWords = document.getElementById("keyWords");
+    const def = document.getElementById("def");
+    const english = document.getElementById("english");
+    const arabic = document.getElementById("arabic");
+    const scrambledText = document.getElementById("scrambledText");
+    const audio = document.getElementById("audio");
+    const image = document.getElementById("image");
+    const illustrationDetails = document.getElementById("illustrations");
+    const questionBasedOnAudio = document.getElementById("questionBasedOnAudio");
+    const audioIndexInput = document.getElementById("audioIndex");
+    const autoPlayCheckbox = document.getElementById("autoPlay");
+
+    const definitionDetails = document.getElementById("definition");
+    const englishDetails = document.getElementById("englishDetails");
+    const arabicDetails = document.getElementById("arabicDetails");
+    const answer = document.getElementById("answer");
+    const answerDetails = document.getElementById("answerDetails");
+    const prevBtn = document.getElementById("prev");
+    const nextBtn = document.getElementById("next");
+    const startQuizBtn = document.getElementById("startQuizBtn");
+
+    // DOM Elements - Quiz Mode
+    const lessonMode = document.getElementById("lessonMode");
+    const quizModeSection = document.getElementById("quizMode");
+    const quizProgress = document.getElementById("quizProgress");
+    const quizQuestion = document.getElementById("quizQuestion");
+    const quizOptions = document.getElementById("quizOptions");
+    const quizPrevBtn = document.getElementById("quizPrev");
+    const quizNextBtn = document.getElementById("quizNext");
+    const exitQuizBtn = document.getElementById("exitQuiz");
+    const quizScore = document.getElementById("quizScore");
+    const scoreText = document.getElementById("scoreText");
+    const scoreMessage = document.getElementById("scoreMessage");
+    const quizReview = document.getElementById("quizReview");
+    const reviewContent = document.getElementById("reviewContent");
+    const speakingIndicator = document.getElementById("speakingIndicator");
+    const speakQuestionBtn = document.getElementById("speakQuestionBtn");
+    const quizAudio = document.getElementById("quizAudio");
+    const quizAudioSource = document.getElementById("quizAudioSource");
+
+    // ========== SCRAMBLE FUNCTION ==========
+    function scrambleWords(text) {
+      const words = text.split(" ");
+      for (let i = words.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [words[i], words[j]] = [words[j], words[i]];
+      }
+      return words.join(" ");
+    }
+
+    function toggleScramble() {
+      const englishText = english.textContent.trim();
+      if (!englishText) {
+        return;
+      }
+      isScrambled = !isScrambled;
+      if (isScrambled) {
+        scrambledText.textContent = scrambleWords(englishText);
+        scrambledText.style.display = "block";
+      } else {
+        scrambledText.textContent = "";
+        scrambledText.style.display = "none";
+      }
+    }
+
+    scrambleCheckbox.addEventListener("change", toggleScramble);
+
+    // ========== LESSON MODE FUNCTIONS ==========
+    speakEnglishBtn.addEventListener("click", function() {
+      const s = Sentences[currentAudioIndex];
+      if (s && s.english && s.english.trim()) {
+        const cleanedText = s.english.replace(/<br\s*\/?>/gi, ' '); 
+        utterance.text = cleanedText;
+        utterance.lang = "en-US";
+        speechSynthesis.cancel();      
+        speechSynthesis.speak(utterance);
+        isSpeaking = true;
+        updateSpeakingUI();
+        utterance.onend = function() {
+          isSpeaking = false;
+          updateSpeakingUI();
+        };
+      }
+    });
+
+    speakArabicBtn.addEventListener("click", function() {
+      const s = Sentences[currentAudioIndex];
+      if (s && s.arabic && s.arabic.trim()) {
+        const cleanedText = s.arabic.replace(/<br\s*\/?>/gi, ' '); 
+        utterance.text = cleanedText;
+        utterance.lang = "ar-SA";
+        speechSynthesis.cancel();      
+        speechSynthesis.speak(utterance);
+        isSpeaking = true;
+        updateSpeakingUI();
+        utterance.onend = function() {
+          isSpeaking = false;
+          updateSpeakingUI();
+        };
+      }
+    });
+
+    speakSelectionBtn.addEventListener("click", function() {
+      const selectedText = window.getSelection().toString().trim();
+      if (!selectedText) {
+        return;
+      }
+      utterance.text = selectedText;
+      utterance.lang = "en-US";
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utterance);
+      isSpeaking = true;
+      updateSpeakingUI();
+      utterance.onend = function() {
+        isSpeaking = false;
+        updateSpeakingUI();
+      };
+    });
+
+    stopBtn.addEventListener("click", function() {
+      speechSynthesis.cancel();
+      isSpeaking = false;
+      updateSpeakingUI();
+    });
+
+    function updateButtonState() {
+      prevBtn.disabled = currentAudioIndex === 0;
+      nextBtn.disabled = currentAudioIndex === Sentences.length - 1;
+    }
+
+    function displayData() {
+      const s = Sentences[currentAudioIndex];
+
+      q.textContent = (currentAudioIndex + 1) + "/" + Sentences.length;
+
+      refer_to.textContent = s.refer_to || "";
+      back_to.textContent = s.back_to || "";
+
+      const referToContainer = document.getElementById("refer_to_container");
+      const backToContainer = document.getElementById("back_to_container");
+
+      referToContainer.style.display = s.refer_to && s.refer_to.trim() ? "block" : "none";
+      backToContainer.style.display = s.back_to && s.back_to.trim() ? "block" : "none";
+
+      keyWords.innerHTML = s.keyWord || "";
+      speaker.innerHTML = s.speaker || "";
+      def.innerHTML = s.definition || "";
+      english.innerHTML = s.english || "";
+      arabic.innerHTML = s.arabic || "";
+      audio.src = s.audio || "";
+      answer.innerHTML = s.answer || "";
+      scrambledText.textContent = "";
+      isScrambled = false;
+      scrambleCheckbox.checked = false;
+      scrambledText.style.display = "none";
+
+      questionBasedOnAudio.innerHTML = s.audioQuestion && s.audioQuestion.trim()
+        ? "<details aria-label='Audio question'><summary>Question</summary>" + s.audioQuestion + "</details>"
+        : "";
+
+      answerDetails.style.display = s.answer && s.answer.trim() ? "block" : "none";
+      definitionDetails.style.display = s.definition && s.definition.trim() ? "block" : "none";
+      englishDetails.style.display = s.english && s.english.trim() ? "block" : "none";
+      arabicDetails.style.display = s.arabic && s.arabic.trim() ? "block" : "none";
+
+      if (s.Image && s.Image.trim() !== "" && s.Image !== ".jpg") {
+        image.src = s.Image;
+        image.style.display = "block";
+        illustrationDetails.style.display = "block";
+      } else {
+        image.removeAttribute("src");
+        image.style.display = "none";
+        illustrationDetails.style.display = "none";
+      }
+
+      updateButtonState();
+    }
+
+    function resetDetails() {
+      definitionDetails.open = false;
+      englishDetails.open = false;
+      arabicDetails.open = false;
+      answerDetails.open = false;
+    }
+
+    function nextSentence() {
+      speechSynthesis.cancel();
+      isSpeaking = false;
+      if (currentAudioIndex < Sentences.length - 1) {
+        currentAudioIndex++;
+        displayData();
+        resetDetails();
+        if (autoPlayCheckbox.checked) {
+          audio.play().catch(function() {});
+        }
+      }
+    }
+
+    function prevSentence() {
+      speechSynthesis.cancel();
+      isSpeaking = false;
+      if (currentAudioIndex > 0) {
+        currentAudioIndex--;
+        displayData();
+        resetDetails();
+        if (autoPlayCheckbox.checked) {
+          audio.play().catch(function() {});
+        }
+      }
+    }
+
+    nextBtn.addEventListener("click", nextSentence);
+    prevBtn.addEventListener("click", prevSentence);
+
+    document.getElementById("search").addEventListener("click", function() {
+      const index = parseInt(audioIndexInput.value, 10) - 1;
+      if (index >= 0 && index < Sentences.length) {
+        currentAudioIndex = index;
+        displayData();
+      } else {
+        alert("Enter a number between 1 and " + Sentences.length);
+      }
+    });
+
+    audioIndexInput.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        document.getElementById("search").click();
+      }
+    });
+
+    document.addEventListener("keydown", function(e) {
+      if (!quizModeActive) {
+        if (e.key === "ArrowRight") {
+          nextSentence();
+        }
+        if (e.key === "ArrowLeft") {
+          prevSentence();
+        }
+      } else {
+        if (e.key === "ArrowRight") {
+          nextQuizQuestion();
+        }
+        if (e.key === "ArrowLeft") {
+          prevQuizQuestion();
+        }
+      }
+    });
+
+    function updateSpeakingUI() {
+      if (isSpeaking) {
+        speakingIndicator.classList.add("active");
+      } else {
+        speakingIndicator.classList.remove("active");
+      }
+    }
+
+    // ========== QUIZ MODE FUNCTIONS ==========
+    startQuizBtn.addEventListener("click", function() {
+      quizModeActive = true;
+      speechSynthesis.cancel();
+      lessonMode.classList.add("hidden");
+      quizModeSection.classList.add("active");
+      currentQuizQuestion = 0;
+      quizAnswers = new Array(quizData.length).fill(null);
+      loadQuizQuestion();
+    });
+
+    exitQuizBtn.addEventListener("click", function() {
+      quizModeActive = false;
+      quizModeSection.classList.remove("active");
+      lessonMode.classList.remove("hidden");
+      speechSynthesis.cancel();
+      quizAudio.pause();
+      quizScore.style.display = "none";
+      quizReview.style.display = "none";
+    });
+
+    function loadQuizQuestion() {
+      const question = quizData[currentQuizQuestion];
+      
+      quizProgress.textContent = "Question " + (currentQuizQuestion + 1) + " of " + quizData.length;
+      quizQuestion.textContent = question.question;
+
+      // Load audio clip for this question
+      quizAudioSource.src = question.audioClip;
+      quizAudio.load();
+
+      quizOptions.innerHTML = "";
+      question.options.forEach(function(option, index) {
+        const optionDiv = document.createElement("div");
+        optionDiv.className = "quiz-option";
+        
+        const isChecked = quizAnswers[currentQuizQuestion] === index ? "checked" : "";
+        
+        optionDiv.innerHTML = 
+          "<div class='quiz-option-content'>" +
+          "<input type='radio' id='quizOption" + index + "' name='quizAnswer' value='" + index + "' " + isChecked + ">" +
+          "<label for='quizOption" + index + "'>" + option + "</label>" +
+          "</div>" +
+          "<button class='option-speak-btn' onclick='speakQuizOption(" + index + ")' aria-label='Read option " + String.fromCharCode(65 + index) + "'>🔊</button>";
+        
+        quizOptions.appendChild(optionDiv);
+      });
+
+      updateQuizButtonState();
+    }
+
+    function updateQuizButtonState() {
+      quizPrevBtn.disabled = currentQuizQuestion === 0;
+      if (currentQuizQuestion === quizData.length - 1) {
+        quizNextBtn.textContent = "Submit Quiz →";
+        quizNextBtn.setAttribute("aria-label", "Submit quiz");
+      } else {
+        quizNextBtn.textContent = "Next →";
+        quizNextBtn.setAttribute("aria-label", "Next question");
+      }
+    }
+
+    function nextQuizQuestion() {
+      const selected = document.querySelector('input[name="quizAnswer"]:checked');
+      if (!selected) {
+        alert("Please select an answer before proceeding!");
+        return;
+      }
+
+      quizAnswers[currentQuizQuestion] = parseInt(selected.value, 10);
+
+      if (currentQuizQuestion < quizData.length - 1) {
+        currentQuizQuestion++;
+        loadQuizQuestion();
+      } else {
+        submitQuiz();
+      }
+    }
+
+    function prevQuizQuestion() {
+      const selected = document.querySelector('input[name="quizAnswer"]:checked');
+      if (selected) {
+        quizAnswers[currentQuizQuestion] = parseInt(selected.value, 10);
+      }
+
+      if (currentQuizQuestion > 0) {
+        currentQuizQuestion--;
+        loadQuizQuestion();
+      }
+    }
+
+    quizNextBtn.addEventListener("click", nextQuizQuestion);
+    quizPrevBtn.addEventListener("click", prevQuizQuestion);
+     speakQuestionBtn.addEventListener("click", speakQuizQuestion);
+
+    function speakQuizQuestion() {
+      speechSynthesis.cancel();
+      const question = quizData[currentQuizQuestion].question;
+      const utteranceQuestion = new SpeechSynthesisUtterance(question);
+      utteranceQuestion.lang = "en-US";
+      utteranceQuestion.onstart = function() {
+        isSpeaking = true;
+        updateSpeakingUI();
+      };
+      utteranceQuestion.onend = function() {
+        isSpeaking = false;
+        updateSpeakingUI();
+      };
+      speechSynthesis.speak(utteranceQuestion);
+    }
+    
+
+    function speakQuizOption(index) {
+      speechSynthesis.cancel();
+      const option = quizData[currentQuizQuestion].options[index];
+      const utteranceOption = new SpeechSynthesisUtterance(option);
+      utteranceOption.lang = "en-US";
+      utteranceOption.onstart = function() {
+        isSpeaking = true;
+        updateSpeakingUI();
+      };
+      utteranceOption.onend = function() {
+        isSpeaking = false;
+        updateSpeakingUI();
+      };
+      speechSynthesis.speak(utteranceOption);
+    }
+
+    function submitQuiz() {
+      const correct = quizAnswers.filter(function(answer, index) {
+        return answer === quizData[index].correct;
+      }).length;
+      
+      const percentage = Math.round((correct / quizData.length) * 100);
+
+      scoreText.innerHTML = "<strong>" + correct + " out of " + quizData.length + " correct</strong><br>Score: " + percentage + "%";
+
+      let message = "";
+      if (percentage === 100) {
+        message = "Perfect! You understood the conversation perfectly! 🏆";
+      } else if (percentage >= 80) {
+        message = "Excellent! Your listening comprehension is very good! 🌟";
+      } else if (percentage >= 60) {
+        message = "Good job! You understood most of the conversation. 📚";
+      } else if (percentage >= 40) {
+        message = "Not bad! Listen again and try to understand more details. 💪";
+      } else {
+        message = "Keep practicing! Listen carefully and try again! 🚀";
+      }
+      scoreMessage.textContent = message;
+
+      quizScore.classList.remove("fail");
+      if (percentage < 60) {
+        quizScore.classList.add("fail");
+      }
+
+      generateQuizReview();
+
+      quizScore.style.display = "block";
+      quizReview.style.display = "block";
+    }
+
+    function generateQuizReview() {
+      reviewContent.innerHTML = "";
+
+      quizData.forEach(function(question, index) {
+        const isCorrect = quizAnswers[index] === question.correct;
+        const reviewItem = document.createElement("details");
+        
+        const correctClass = isCorrect ? "✓ Correct" : "✗ Incorrect";
+        const correctAnswer = isCorrect ? "" : "<p><strong>Correct answer:</strong> " + question.options[question.correct] + "</p>";
+        
+        reviewItem.innerHTML = 
+          "<summary>Question " + (index + 1) + ": " + correctClass + "</summary>" +
+          "<p><strong>Question:</strong> " + question.question + "</p>" +
+          "<p><strong>Your answer:</strong> " + (quizAnswers[index] !== null ? question.options[quizAnswers[index]] : "Not answered") + "</p>" +
+          correctAnswer;
+        
+        reviewContent.appendChild(reviewItem);
+      });
+    }
+
+    // Initialize
+    displayData();
+  </script>
+</body>
+</html>
